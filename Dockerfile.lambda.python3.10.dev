@@ -1,0 +1,36 @@
+FROM public.ecr.aws/lambda/python:3.10
+
+USER root
+
+RUN yum -y update
+
+RUN yum -y install openssh-server openssh-clients
+RUN yum -y install sudo
+
+ENV SSH_USER docker
+ENV SSH_PASSWORD docker
+
+RUN sudo useradd -m -s /bin/bash $SSH_USER && \
+    sudo echo "$SSH_USER:$SSH_PASSWORD" | sudo chpasswd
+
+RUN sudo chown docker /etc/ssh/sshd_config
+RUN sudo chmod 644 /etc/ssh/sshd_config
+RUN sudo chown docker /etc/ssh
+RUN sudo chmod 775 /etc/ssh
+RUN sudo usermod -aG root docker
+
+USER docker
+
+ENV SSH_USER_WD /home/$SSH_USER
+
+WORKDIR $SSH_USER_WD
+
+RUN echo "export PATH=$PATH:/var/lang/bin:/usr/local/bin:/usr/bin/:/bin:/opt/bin" >> $SSH_USER_WD/.bashrc
+RUN echo "alias ll='ls -alF'" >> $SSH_USER_WD/.bashrc
+RUN echo "alias la='ls -A'" >> $SSH_USER_WD/.bashrc
+RUN echo "alias l='ls -CF'" >> $SSH_USER_WD/.bashrc
+
+RUN ssh-keygen -A
+
+ENTRYPOINT ["/usr/sbin/sshd"]
+CMD ["-D"]
