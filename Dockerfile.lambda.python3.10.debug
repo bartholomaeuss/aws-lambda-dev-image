@@ -9,6 +9,11 @@ RUN yum -y install sudo
 RUN yum -y install rsync
 RUN yum -y install which
 
+# <DEBUGGING>
+RUN yum -y install nano
+RUN yum -y install htop
+# </DEBUGGING>
+
 ENV SSH_USER docker
 ENV SSH_PASSWORD docker
 
@@ -31,6 +36,13 @@ RUN echo "export PATH=$PATH:/var/lang/bin:/usr/local/bin:/usr/bin/:/bin:/opt/bin
 RUN echo "alias ll='ls -alF'" >> $SSH_USER_WD/.bashrc
 RUN echo "alias la='ls -A'" >> $SSH_USER_WD/.bashrc
 RUN echo "alias l='ls -CF'" >> $SSH_USER_WD/.bashrc
+
+# <DEBUGGING>
+RUN echo "export PATH=$PATH:/var/lang/bin:/usr/local/bin:/usr/bin/:/bin:/opt/bin" >> $SSH_USER_WD/.bashrc
+RUN echo "alias ll='ls -alF'"
+RUN echo "alias la='ls -A'"
+RUN echo "alias l='ls -CF'"
+# </DEBUGGING>
 
 RUN ssh-keygen -A
 
