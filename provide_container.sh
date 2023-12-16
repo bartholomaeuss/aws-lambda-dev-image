@@ -19,7 +19,7 @@ provide_container(){
     scp "${dockerfile}" "${user}@${remote}":"~/${dockerfile}"
     ssh -l "${user}" "${remote}" "docker kill \$(docker ps -q --filter ancestor=${image}:${tag})"
     ssh -l "${user}" "${remote}" "docker build -t ${image}:${tag} -f ./${dockerfile} ."
-    ssh -l "${user}" "${remote}" "docker run -d -v /home/${user}/pycharm_project:/var/task -p 2222:22 ${image}:${tag}"
+    ssh -l "${user}" "${remote}" "docker run -d -p 2222:22 ${image}:${tag}"
 }
 
 while getopts ":d:i:r:t:u:h" opt; do
