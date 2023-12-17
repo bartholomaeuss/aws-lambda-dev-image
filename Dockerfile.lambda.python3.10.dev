@@ -10,6 +10,7 @@ RUN yum -y install openssh-server openssh-clients
 RUN yum -y install sudo
 RUN yum -y install rsync
 RUN yum -y install which
+RUN yum -y install tar
 
 # <DEBUGGING>
 RUN yum -y install nano
@@ -39,7 +40,7 @@ RUN sudo chown docker $SSH_USER_WD/.ssh/authorized_keys
 RUN sudo chmod 600 $SSH_USER_WD/.ssh/authorized_keys
 RUN sudo usermod -aG root docker
 
-USER docker
+
 RUN echo "export PATH=$PATH:/var/lang/bin:/usr/local/bin:/usr/bin/:/bin:/opt/bin" >> $SSH_USER_WD/.bashrc
 RUN echo "alias ll='ls -alF'" >> $SSH_USER_WD/.bashrc
 RUN echo "alias la='ls -A'" >> $SSH_USER_WD/.bashrc
@@ -49,6 +50,7 @@ RUN echo "export LD_LIBRARY_PATH=/var/lang/lib:/lib64:/usr/lib64:/var/runtime:/v
 RUN echo "export LAMBDA_RUNTIME_DIR=/var/runtime" >> $SSH_USER_WD/.bashrc
 RUN echo "export PYTHONPATH=/var/runtime" >> $SSH_USER_WD/.bashrc
 
+#USER docker
 RUN ssh-keygen -A
 
 WORKDIR $LAMBDA_TASK_ROOT

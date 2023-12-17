@@ -1,8 +1,5 @@
 #!/bin/bash
 
-clean_uninstall=false
-install=false
-
 show_help(){
     echo "Deploy basic ssh config to $HOME/.ssh/config."
     echo "usage: $0 [-d] [-i] [-r] [-t] [-u] [-h]"
@@ -20,6 +17,7 @@ provide_container(){
     ssh -l "${user}" "${remote}" "docker kill \$(docker ps -q --filter ancestor=${image}:${tag})"
     ssh -l "${user}" "${remote}" "docker build -t ${image}:${tag} -f ./${dockerfile} ."
     ssh -l "${user}" "${remote}" "docker run -d -p 2222:22 ${image}:${tag}"
+    exit 0
 }
 
 while getopts ":d:i:r:t:u:h" opt; do
